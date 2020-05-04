@@ -53,7 +53,7 @@ REAL ** matrix::RMATRIX_ZERO(double **m, double zero, int imax, int jmax)
 void matrix::FREE_RMATRIX(REAL** m, int imax)
 {
     int i;
-    for(i = 0; i < imax; ++i) {
+    for(i = 0; i < imax; i++) {
         delete [] m[i];
     }
     

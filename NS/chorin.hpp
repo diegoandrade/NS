@@ -27,8 +27,8 @@ public:
     ~chorin();
     
     REAL** solution;
-    REAL** F;
-    REAL** G;
+    //REAL** F;
+    //REAL** G;
     REAL** RHS;
     REAL** RIT;
     REAL** PNEW;
@@ -36,7 +36,7 @@ public:
     REAL** U;
     REAL** V;
     
-    REAL ** d2ux;
+    /*REAL ** d2ux;
       // compute (d^2 u/d y^2)
     REAL ** d2uy;
       // compute (d u^2/d x)
@@ -50,7 +50,7 @@ public:
       // compute (d v^2/d y)
     REAL ** d1v2y;
       // compute (d uv/d x)
-    REAL ** d1uvx;
+    REAL ** d1uvx;*/
     
     
     REAL** m;
@@ -66,7 +66,7 @@ public:
     
     REAL** deriv2ux(REAL** U, REAL** solution , int imax, int jmax, REAL delx);
     
-    REAL** deriv2uy(REAL** U, int imax, int jmax, REAL dely);
+    REAL** deriv2uy(REAL** U, REAL** d2uy, int imax, int jmax, REAL dely);
     
     REAL** deriv1u2x(REAL** U, REAL** solution, int imax, int jmax, REAL delx, REAL gamma);
     
@@ -112,9 +112,9 @@ public:
     
     REAL** boundaryValuesP (REAL** P, int imax, int jmax, int wN, int wS, int wE, int wW);
     
-    REAL** boundaryValuesF (REAL** U, int imax, int jmax, int wN, int wS, int wE, int wW);
+    REAL** boundaryValuesF (REAL** U, REAL**F, int imax, int jmax, int wN, int wS, int wE, int wW);
     
-    REAL** boundaryValuesG (REAL** V, int imax, int jmax, int wN, int wS, int wE, int wW);
+    REAL** boundaryValuesG (REAL** V, REAL**G, int imax, int jmax, int wN, int wS, int wE, int wW);
     
     REAL** RMATRIX_ZERO(REAL **m, REAL zero, int imax, int jmax);
 

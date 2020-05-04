@@ -28,18 +28,18 @@ chorin::~chorin()
 void chorin::chorinI(int imax, int jmax, REAL** mo)
 {
     
-    solution = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
-    F = obj_m.RMATRIX(m , 0.0, imax+2, jmax+2); //delete object??
-    G = obj_m.RMATRIX(m , 0.0, imax+2, jmax+2); //delete object??
-    RHS = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
-    RIT = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
-    PNEW = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
-    P = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
-    U = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
-    V = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+    //solution = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+    //F = obj_m.RMATRIX(m , 0.0, imax+2, jmax+2); //delete object??
+    //G = obj_m.RMATRIX(m , 0.0, imax+2, jmax+2); //delete object??
+    //RHS = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+   // RIT = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+   // PNEW = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+    //P = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+   // U = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+   // V = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
     m = obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
     
-    d2ux=obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
+    /*d2ux=obj_m.RMATRIX(m, 0.0, imax+2, jmax+2); //delete object??
     // compute (d^2 u/d y^2)
     d2uy=obj_m.RMATRIX(m, 0.0, imax+2, jmax+2);
     // compute (d u^2/d x)
@@ -53,7 +53,7 @@ void chorin::chorinI(int imax, int jmax, REAL** mo)
     // compute (d v^2/d y)
     d1v2y=obj_m.RMATRIX(m, 0.0, imax+2, jmax+2);
     // compute (d uv/d x)
-    d1uvx=obj_m.RMATRIX(m, 0.0, imax+2, jmax+2);
+    d1uvx=obj_m.RMATRIX(m, 0.0, imax+2, jmax+2);*/
       
 }
 
@@ -125,53 +125,53 @@ REAL** chorin::boundaryValuesV(REAL** V, REAL vstar,
     return (V);
 }
 
-REAL** chorin::deriv2ux(REAL** U, REAL** solution , int imax, int jmax, REAL delx)
+REAL** chorin::deriv2ux(REAL** U, REAL** d2ux , int imax, int jmax, REAL delx)
 {
     int i,j;
-    REAL** p =obj_m.RMATRIX_ZERO(solution, 0.0, imax+2, jmax+2); //delete object??
+    //p =RMATRIX_ZERO(solution, 0.0, imax+2, jmax+2); //delete object??
     
     
     //obj_m.PRINT_MATRIX(solution, imax+2, jmax+2,"solution-");
     
     for(i=1;i<imax;i++){
         for(j=1;j<jmax+1;j++){
-            p[i][j]=(U[i+1][j]-2*U[i][j]+U[i-1][j])/pow(delx,2);
+            d2ux[i][j]=(U[i+1][j]-2*U[i][j]+U[i-1][j])/pow(delx,2);
             //cout << delx << "\t";
         }
     }
     //obj_m.PRINT_MATRIX(solution, imax+2, jmax+2,"solution+");
-    return(p);
+    return(d2ux);
 }
 
-REAL** chorin::deriv2uy(REAL** U, int imax, int jmax, REAL dely)
+REAL** chorin::deriv2uy(REAL** U, REAL** d2uy, int imax, int jmax, REAL dely)
 {
     int i,j;
-    solution = RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
+    // d2uy = RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax;i++){
         for(j=1;j<jmax+1;j++){
-            solution[i][j]=(U[i][j+1]-2*U[i][j]+U[i][j-1])/pow(dely,2);
+            d2uy[i][j]=(U[i][j+1]-2*U[i][j]+U[i][j-1])/pow(dely,2);
             //cout << "d2uy[" << i <<"]["<<j<<"]: " <<solution[i][j] << endl;
         }
     }
     
-    return(solution);
+    return(d2uy);
     
 }
 
-REAL** chorin::deriv1u2x(REAL** U, REAL** solution, int imax, int jmax, REAL delx, REAL gamma)
+REAL** chorin::deriv1u2x(REAL** U, REAL** d1u2x, int imax, int jmax, REAL delx, REAL gamma)
 {
     int i,j;
     //solution =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax;i++){
         for(j=1;j<jmax+1;j++){
-            solution[i][j]=1/delx*(pow((U[i][j]+U[i+1][j])/2,2)-pow((U[i-1][j]+U[i][j])/2,2))+
+            d1u2x[i][j]=1/delx*(pow((U[i][j]+U[i+1][j])/2,2)-pow((U[i-1][j]+U[i][j])/2,2))+
             (gamma/delx)*((fabs(U[i][j]+U[i+1][j])/2)*(U[i][j]-U[i+1][j])/2-(fabs(U[i-1][j]+U[i][j])/2)*(U[i-1][j]-U[i][j])/2);
         }
     }
     
-    return(solution);
+    return(d1u2x);
 }
 
 REAL** chorin::deriv1uvy(REAL** U,  REAL** V, REAL** solution, int imax, int jmax, REAL dely, REAL gamma)
@@ -195,32 +195,32 @@ REAL** chorin::deriv1uvy(REAL** U,  REAL** V, REAL** solution, int imax, int jma
 }
 
 
-REAL** chorin::deriv2vx(REAL** V, REAL** solution, int imax, int jmax, REAL delx)
+REAL** chorin::deriv2vx(REAL** V, REAL** d2vx, int imax, int jmax, REAL delx)
 {
     int i,j;
     //solution =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
        
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax;j++){
-               solution[i][j]= (V[i+1][j]-2*V[i][j]+V[i-1][j])/pow(delx,2);
+               d2vx[i][j]= (V[i+1][j]-2*V[i][j]+V[i-1][j])/pow(delx,2);
            }
        }
        
-    return(solution);
+    return(d2vx);
 }
 
-REAL** chorin::deriv2vy(REAL** V, REAL** solution, int imax, int jmax, REAL dely)
+REAL** chorin::deriv2vy(REAL** V, REAL** d2vy, int imax, int jmax, REAL dely)
 {
     int i,j;
     //solution =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
     
        for(i=1;i<imax+1;i++){
            for(j=1;j<jmax;j++){
-               solution[i][j]= (V[i][j+1]-2*V[i][j]+V[i][j+1])/pow(dely,2);
+               d2vy[i][j]= (V[i][j+1]-2*V[i][j]+V[i][j+1])/pow(dely,2);
            }
        }
        
-       return(solution);
+       return(d2vy);
 }
 
 
@@ -242,19 +242,19 @@ REAL** chorin::deriv1v2y(REAL** V, REAL** solution, int imax, int jmax, REAL del
 }
 
 
-REAL** chorin::deriv1uvx(REAL ** U, REAL ** V, REAL** solution, int imax, int jmax, REAL delx, REAL gamma)
+REAL** chorin::deriv1uvx(REAL ** U, REAL ** V, REAL** d1uvx, int imax, int jmax, REAL delx, REAL gamma)
 {
     int i,j;
     //solution =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax;i++){
         for(j=1;j<jmax+1;j++){
-            solution[i][j]= 1/delx*((U[i][j]+U[i][j+1])/2*(V[i][j]+V[i+1][j])/2-(U[i-1][j]+U[i-1][j+1])/2*(V[i-1][j]+V[i][j])/2) +
+            d1uvx[i][j]= 1/delx*((U[i][j]+U[i][j+1])/2*(V[i][j]+V[i+1][j])/2-(U[i-1][j]+U[i-1][j+1])/2*(V[i-1][j]+V[i][j])/2) +
             (gamma/delx)*(fabs(U[i][j]+U[i][j+1])/2*(V[i][j]-V[i+1][j])/2-fabs(U[i-1][j]+U[i-1][j+1])/2*(V[i-1][j]-V[i][j])/2);
         }
     }
     
-    return(solution);
+    return(d1uvx);
 }
 
 REAL** chorin::compF(REAL** F, REAL** U,int imax,int  jmax,REAL delx,REAL delt, REAL Reynolds, REAL GX,
@@ -263,7 +263,7 @@ REAL** chorin::compF(REAL** F, REAL** U,int imax,int  jmax,REAL delx,REAL delt, 
     
     int i,j;
 
-    //F =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
+   // F =RMATRIX_ZERO(F, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax+2;j++){
@@ -281,7 +281,7 @@ REAL** chorin::compG(REAL** G, REAL** V,int imax,int  jmax,REAL dely,REAL delt, 
     
     int i,j;
     
-    //G =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
+   // G = RMATRIX_ZERO(G, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax;j++){
@@ -296,7 +296,7 @@ REAL** chorin::compG(REAL** G, REAL** V,int imax,int  jmax,REAL dely,REAL delt, 
  REAL** chorin::computeRHS(REAL** RHS, int imax, int jmax, REAL delt, REAL delx, REAL dely, REAL ** F, REAL ** G)
 {
     int i,j;
-    RHS =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
+    //RHS =RMATRIX_ZERO(RHS, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax+1;j++){
@@ -365,7 +365,7 @@ REAL** chorin::computepNew(REAL** PNEW, int imax, int jmax, REAL omega, REAL del
     int i,j;
     REAL rdx2,rdy2;
 
-    PNEW =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
+    //PNEW =RMATRIX_ZERO(PNEW, 0.0, imax+2, jmax+2); //delete object??
     
     for(j=1;j<jmax+1;j++){
         PNEW[0][j]=P[1][j];
@@ -400,7 +400,7 @@ REAL** chorin::computeRit(REAL** RIT, int imax, int jmax, REAL delx, REAL dely, 
     int i,j;
     REAL rdx2,rdy2;
     //matrix o_matrix;
-    RIT =obj_m.RMATRIX_ZERO(m, 0.0, imax+2, jmax+2); //delete object??
+    //RIT =RMATRIX_ZERO(RIT, 0.0, imax+2, jmax+2); //delete object??
     
     rdx2 = 1./delx/delx;
     rdy2 = 1./dely/dely;
@@ -534,11 +534,11 @@ REAL** chorin::boundaryValuesP (REAL** P, int imax, int jmax, int wN, int wS, in
 }
 
 
-REAL** chorin::boundaryValuesF (REAL** U, int imax, int jmax, int wN, int wS, int wE, int wW)
+REAL** chorin::boundaryValuesF (REAL** U, REAL**F, int imax, int jmax, int wN, int wS, int wE, int wW)
 {
     int j;
     //matrix o_matrix;
-    //REAL** F =o_matrix.RMATRIX(0.0, imax+2, jmax+2); //delete object??
+    //F = RMATRIX_ZERO(F,0.0, imax+2, jmax+2); //delete object??
     
     
     //left wall
@@ -558,7 +558,7 @@ REAL** chorin::boundaryValuesF (REAL** U, int imax, int jmax, int wN, int wS, in
     return(F);
 }
 
-REAL** chorin::boundaryValuesG (REAL** V, int imax, int jmax, int wN, int wS, int wE, int wW)
+REAL** chorin::boundaryValuesG (REAL** V, REAL** G, int imax, int jmax, int wN, int wS, int wE, int wW)
 {
     int i;
     
