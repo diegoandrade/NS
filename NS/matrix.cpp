@@ -85,3 +85,30 @@ void matrix::PRINT_MATRIX(REAL** m, int imax, int jmax, char* name)
     }
     
 }
+
+void matrix::RMATRIX_TO_FILE(REAL **m, char*file, int imax, int jmax)
+{
+    int i,j;
+    
+    ofstream outfile (file); //Check is there is a file
+    
+    for(i = 0; i < imax; ++i){
+        for(j=0; j< jmax; ++j){
+                //outfile  << "\n[" << m << "]"<< "["<< n << "]:" <<endl;
+                
+                // outfile  << "X[" << m << "]"<< "["<< n << "]= "<< Mat[m][n].x <<"\t";
+                // outfile  << "Y[" << m << "]"<< "["<< n << "]= "<< Mat[m][n].y <<"\t";
+                // outfile  << "Z[" << m << "]"<< "["<< n << "]= "<< Mat[m][n].z <<"\t";
+                
+                
+                outfile  << m[i][j] <<"\t";
+                
+                
+            }
+         outfile  << endl;
+        }
+    
+    
+    outfile.close();
+    
+}

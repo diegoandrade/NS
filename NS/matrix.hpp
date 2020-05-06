@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <iostream>
 #include"datadef.h"
+#include <fstream>
 
 using namespace std;
 
@@ -28,6 +29,8 @@ public:
     REAL** RMATRIX_ZERO (REAL** m, REAL zero, int imax, int jmax);
     void FREE_RMATRIX(REAL** m, int imax);
     void PRINT_MATRIX(REAL** m, int imax, int jmax, char* name);
+    
+    void RMATRIX_TO_FILE (REAL **m, char* file, int imax, int jmax);
    
 };
 

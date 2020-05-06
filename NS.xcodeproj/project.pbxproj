@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B5320EAD245971A900B48CF8 /* chorin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5320EAB245971A900B48CF8 /* chorin.cpp */; };
-		B55F4CD5245F2CCC00EF7666 /* functions.m in Sources */ = {isa = PBXBuildFile; fileRef = B55F4CD4245F2CCB00EF7666 /* functions.m */; };
 		B5A1746F2459011A003BBFBB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5A1746E2459011A003BBFBB /* main.cpp */; };
 		B5A1747D245911A6003BBFBB /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5A1747B245911A6003BBFBB /* matrix.cpp */; };
 /* End PBXBuildFile section */
@@ -30,7 +29,6 @@
 		B5320EAC245971A900B48CF8 /* chorin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = chorin.hpp; sourceTree = "<group>"; };
 		B55F4CD2245F2CCB00EF7666 /* cfdMain.nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cfdMain.nb; sourceTree = "<group>"; };
 		B55F4CD3245F2CCB00EF7666 /* cfdMainReynolds.nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cfdMainReynolds.nb; sourceTree = "<group>"; };
-		B55F4CD4245F2CCB00EF7666 /* functions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = functions.m; sourceTree = "<group>"; };
 		B55F4CD6245F2CE600EF7666 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B5A1746B2459011A003BBFBB /* NS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NS; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5A1746E2459011A003BBFBB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -63,7 +61,6 @@
 				B55F4CD6245F2CE600EF7666 /* README.md */,
 				B55F4CD2245F2CCB00EF7666 /* cfdMain.nb */,
 				B55F4CD3245F2CCB00EF7666 /* cfdMainReynolds.nb */,
-				B55F4CD4245F2CCB00EF7666 /* functions.m */,
 				B5A1746D2459011A003BBFBB /* NS */,
 				B5A1746C2459011A003BBFBB /* Products */,
 				B54BDB3C245DF345008F3AEC /* Frameworks */,
@@ -151,7 +148,6 @@
 				B5A1747D245911A6003BBFBB /* matrix.cpp in Sources */,
 				B5A1746F2459011A003BBFBB /* main.cpp in Sources */,
 				B5320EAD245971A900B48CF8 /* chorin.cpp in Sources */,
-				B55F4CD5245F2CCC00EF7666 /* functions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

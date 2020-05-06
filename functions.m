@@ -1,4 +1,4 @@
-/*(* ::Package:: *)
+(* ::Package:: *)
 
 (* ::Input::Initialization:: *)
 (* :Title: NavierStokes *)
@@ -444,9 +444,5 @@ Return[G];
 End[]
 Protect@@Names["NavierStokes`*"];
 EndPackage[]
-
-
-
-*/
 
 

@@ -265,8 +265,10 @@ REAL** chorin::compF(REAL** F, REAL** U,int imax,int  jmax,REAL delx,REAL delt, 
 
    // F =RMATRIX_ZERO(F, 0.0, imax+2, jmax+2); //delete object??
     
+   //obj_m.PRINT_MATRIX(U, imax+2, jmax+2,"U--inter");
+    
     for(i=1;i<imax+1;i++){
-        for(j=1;j<jmax+2;j++){
+        for(j=1;j<jmax+1;j++){
             F[i][j] = U[i][j]+delt*(((1/Reynolds)*(d2ux[i][j]+d2uy[i][j]))-d1u2x[i][j]-d1uvy[i][j]+GX);
            
         }
@@ -284,7 +286,7 @@ REAL** chorin::compG(REAL** G, REAL** V,int imax,int  jmax,REAL dely,REAL delt, 
    // G = RMATRIX_ZERO(G, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax+1;i++){
-        for(j=1;j<jmax;j++){
+        for(j=1;j<jmax+1;j++){
             G[i][j] = V[i][j]+delt*((1/Reynolds)*(d2vx[i][j]+d2vy[i][j])-d1uvx[i][j]-d1v2y[i][j]+GY);
         }
     }
@@ -373,8 +375,8 @@ REAL** chorin::computepNew(REAL** PNEW, int imax, int jmax, REAL omega, REAL del
     }
     
     for(i=1;i<imax+1;i++){
-         PNEW[i][0]=P[i][1];
-         PNEW[i][jmax+1]=P[i][jmax];
+        PNEW[i][0]=P[i][1];
+        PNEW[i][jmax+1]=P[i][jmax];
      }
     
     rdx2 = 1./pow(delx,2);
@@ -382,11 +384,16 @@ REAL** chorin::computepNew(REAL** PNEW, int imax, int jmax, REAL omega, REAL del
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax+1;j++){
-            PNEW[i][j]=(1-omega)*P[i][j]+
+           /* PNEW[i][j]=(1-omega)*P[i][j]+
                         (omega/(((epsE(i,imax) + epsW(i))*rdx2)+((epsN(j,jmax) + epsS(j))*rdy2))) *
-                        ((epsE(i,imax)*P[i+1][j]+epsW(i)*PNEW[i-1][j])*rdx2 +
-                        (epsN(j,jmax)*P[i][j+1]+epsS(j)*PNEW[i][j-1])*rdy2 -
-                         RHS[i][j]);
+                        (((epsE(i,imax)*P[i+1][j])+(epsW(i)*PNEW[i-1][j]))*rdx2 +
+                        ((epsN(j,jmax)*P[i][j+1])+(epsS(j)*PNEW[i][j-1]))*rdy2 -
+                         RHS[i][j]);*/
+            PNEW[i][j]=(1-omega)*P[i][j]+
+            +omega/((epsE(i,imax)+epsW(i))/delx/delx+(epsN(j,jmax)+epsS(j))/dely/dely)
+            *((epsE(i,imax)*P[i+1][j]+epsW(i)*PNEW[i-1][j])/delx/delx
+              +(epsN(j,jmax)*P[i][j+1]+epsS(j)*PNEW[i][j-1])/dely/dely
+            -RHS[i][j]);
         }
     }
     
@@ -404,6 +411,13 @@ REAL** chorin::computeRit(REAL** RIT, int imax, int jmax, REAL delx, REAL dely, 
     
     rdx2 = 1./delx/delx;
     rdy2 = 1./dely/dely;
+    
+    for(i=0;i<imax;i++){
+        for(j=0;j<jmax;j++){
+            RIT[i][j]= 0;
+                        
+        }
+    }
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax+1;j++){
@@ -438,8 +452,8 @@ REAL** chorin::computeU(REAL** U, int imax, int jmax, REAL delt, REAL delx, REAL
 {
     int i,j;
     
-    for(i=1;i<imax;i++){
-        for(j=1;j<jmax+1;j++){
+    for(i=1;i<imax+1;i++){
+        for(j=1;j<jmax+2;j++){
             U[i][j]=F[i][j]-delt/delx*(P[i+1][j]-P[i][j]);
             /*
             cout << "U[" << i <<"]["<<j<<"]: "<<U[i][j]<<endl;
@@ -460,8 +474,8 @@ REAL** chorin::computeV(REAL** V, int imax, int jmax, REAL delt, REAL dely, REAL
 {
     int i,j;
     
-    for(i=1;i<imax+1;i++){
-        for(j=1;j<jmax;j++){
+    for(i=1;i<imax+2;i++){
+        for(j=1;j<jmax+1;j++){
             V[i][j]=G[i][j]-delt/dely*(P[i][j+1]-P[i][j]);
         }
     }
