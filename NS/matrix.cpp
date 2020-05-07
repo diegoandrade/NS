@@ -69,7 +69,7 @@ void matrix::PRINT_MATRIX(REAL** m, int imax, int jmax, char* name)
         cout << "\nFirst 20 Rows and COlumns of the Matrix "<< name << endl << endl;
            for( i=0;i<20;i++){
                for( j=0;j<20;j++){;
-               cout << m[i][j] << "\t";
+               cout << setw(15) << m[i][j] ;
                }
            cout<<"\n";
            }
@@ -77,7 +77,7 @@ void matrix::PRINT_MATRIX(REAL** m, int imax, int jmax, char* name)
         cout << "\nMatrix " << name << endl << endl;
         for( i=0;i<imax;i++){
             for( j=0;j<jmax;j++){;
-            cout << m[i][j] << "\t";
+            cout << setw(15) << m[i][j] ;
             }
         cout<<"\n";
         

@@ -216,7 +216,7 @@ REAL** chorin::deriv2vy(REAL** V, REAL** d2vy, int imax, int jmax, REAL dely)
     
        for(i=1;i<imax+1;i++){
            for(j=1;j<jmax;j++){
-               d2vy[i][j]= (V[i][j+1]-2*V[i][j]+V[i][j+1])/pow(dely,2);
+               d2vy[i][j]= (V[i][j+1]-2*V[i][j]+V[i][j-1])/pow(dely,2);
            }
        }
        
@@ -267,7 +267,7 @@ REAL** chorin::compF(REAL** F, REAL** U,int imax,int  jmax,REAL delx,REAL delt, 
     
    //obj_m.PRINT_MATRIX(U, imax+2, jmax+2,"U--inter");
     
-    for(i=1;i<imax+1;i++){
+    for(i=1;i<imax;i++){
         for(j=1;j<jmax+1;j++){
             F[i][j] = U[i][j]+delt*(((1/Reynolds)*(d2ux[i][j]+d2uy[i][j]))-d1u2x[i][j]-d1uvy[i][j]+GX);
            
@@ -286,7 +286,7 @@ REAL** chorin::compG(REAL** G, REAL** V,int imax,int  jmax,REAL dely,REAL delt, 
    // G = RMATRIX_ZERO(G, 0.0, imax+2, jmax+2); //delete object??
     
     for(i=1;i<imax+1;i++){
-        for(j=1;j<jmax+1;j++){
+        for(j=1;j<jmax;j++){
             G[i][j] = V[i][j]+delt*((1/Reynolds)*(d2vx[i][j]+d2vy[i][j])-d1uvx[i][j]-d1v2y[i][j]+GY);
         }
     }
@@ -302,7 +302,7 @@ REAL** chorin::compG(REAL** G, REAL** V,int imax,int  jmax,REAL dely,REAL delt, 
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax+1;j++){
-            RHS[i][j] = 1/delt*(F[i][j]-F[i-1][j])/delx+(G[i][j]-G[i][j-1])/dely;
+            RHS[i][j] = 1/delt*((F[i][j]-F[i-1][j])/delx+(G[i][j]-G[i][j-1])/dely);
         }
     }
     
@@ -362,40 +362,50 @@ REAL chorin::epsW(int i)
     return (ret);
 }
 
-REAL** chorin::computepNew(REAL** PNEW, int imax, int jmax, REAL omega, REAL delx, REAL dely, REAL** P, REAL ** RHS)
+REAL** chorin::computepNew( int imax, int jmax, REAL omega, REAL delx, REAL dely, REAL** P, REAL ** RHS)
 {
     int i,j;
-    REAL rdx2,rdy2;
+    REAL rdx2,rdy2,a,b,c,d;
 
-    //PNEW =RMATRIX_ZERO(PNEW, 0.0, imax+2, jmax+2); //delete object??
+    REAL** PNEW = RMATRIX_ZERO(0.0, imax+2, jmax+2); //delete object??
     
-    for(j=1;j<jmax+1;j++){
-        PNEW[0][j]=P[1][j];
-        PNEW[imax+1][j]=P[imax][j];
-    }
-    
+   for(j=1;j<jmax+1;j++){
+             PNEW[0][j]=P[1][j];
+             PNEW[imax+1][j]=P[imax][j];
+         }
+         
     for(i=1;i<imax+1;i++){
-        PNEW[i][0]=P[i][1];
-        PNEW[i][jmax+1]=P[i][jmax];
-     }
+             PNEW[i][0]=P[i][1];
+             PNEW[i][jmax+1]=P[i][jmax];
+    }
     
     rdx2 = 1./pow(delx,2);
     rdy2 = 1./pow(dely,2);
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax+1;j++){
-           /* PNEW[i][j]=(1-omega)*P[i][j]+
-                        (omega/(((epsE(i,imax) + epsW(i))*rdx2)+((epsN(j,jmax) + epsS(j))*rdy2))) *
-                        (((epsE(i,imax)*P[i+1][j])+(epsW(i)*PNEW[i-1][j]))*rdx2 +
-                        ((epsN(j,jmax)*P[i][j+1])+(epsS(j)*PNEW[i][j-1]))*rdy2 -
-                         RHS[i][j]);*/
-            PNEW[i][j]=(1-omega)*P[i][j]+
+            
+            a = epsE(i,imax);
+            b = epsW(i);
+            c = epsN(j,jmax);
+            d = epsS(j);
+            
+             PNEW[i][j]=(1-omega)*P[i][j]+
+             +omega/((a+b)*rdx2+(c+d)*rdy2)*(
+            (a*P[i+1][j]+b*PNEW[i-1][j])*rdx2
+             +(c*P[i][j+1]+d*PNEW[i][j-1])*rdy2
+             -RHS[i][j]);
+            
+            
+            /*PNEW[i][j]=(1-omega)*P[i][j]+
             +omega/((epsE(i,imax)+epsW(i))/delx/delx+(epsN(j,jmax)+epsS(j))/dely/dely)
             *((epsE(i,imax)*P[i+1][j]+epsW(i)*PNEW[i-1][j])/delx/delx
               +(epsN(j,jmax)*P[i][j+1]+epsS(j)*PNEW[i][j-1])/dely/dely
-            -RHS[i][j]);
+            -RHS[i][j]);*/
         }
     }
+    
+   
     
     return(PNEW);
     
@@ -409,22 +419,18 @@ REAL** chorin::computeRit(REAL** RIT, int imax, int jmax, REAL delx, REAL dely, 
     //matrix o_matrix;
     //RIT =RMATRIX_ZERO(RIT, 0.0, imax+2, jmax+2); //delete object??
     
-    rdx2 = 1./delx/delx;
-    rdy2 = 1./dely/dely;
+    //obj_m.PRINT_MATRIX(P, imax+2, jmax+2,"-Pinside.inside");
     
-    for(i=0;i<imax;i++){
-        for(j=0;j<jmax;j++){
-            RIT[i][j]= 0;
-                        
-        }
-    }
+    rdx2 = 1./pow(delx,2);
+    rdy2 = 1./pow(dely,2);
     
     for(i=1;i<imax+1;i++){
         for(j=1;j<jmax+1;j++){
             RIT[i][j]= (epsE(i,imax)*(P[i+1][j]-P[i][j])-epsW(i)*(P[i][j]-P[i-1][j]))*rdx2 +
-                        (epsN(j,jmax)*(P[i][j+1]-P[i][j])-epsS(j)*(P[i][j]-P[i][j-1]))*rdy2 - RHS[i][j];
-                        
+            (epsN(j,jmax)*(P[i][j+1]-P[i][j])-epsS(j)*(P[i][j]-P[i][j-1]))*rdy2 - RHS[i][j];
+            //cout << " RIT[" << i <<"]["<<j<<"]: " <<RIT[i][j];
         }
+        //cout <<endl;
     }
     
     return(RIT);
@@ -440,7 +446,9 @@ REAL chorin::normFrobeius(int imax, int jmax, REAL** M)
     for(i=0;i<imax+2;i++){
         for(j=0;j<jmax+2;j++){
             norm += pow(fabs(M[i][j]),2);
+            //cout << setw(15) <<  M[i][j] ;
         }
+        //cout <<endl;
     }
     
     norm = sqrt(norm);
@@ -452,8 +460,8 @@ REAL** chorin::computeU(REAL** U, int imax, int jmax, REAL delt, REAL delx, REAL
 {
     int i,j;
     
-    for(i=1;i<imax+1;i++){
-        for(j=1;j<jmax+2;j++){
+    for(i=1;i<imax;i++){
+        for(j=1;j<jmax+1;j++){
             U[i][j]=F[i][j]-delt/delx*(P[i+1][j]-P[i][j]);
             /*
             cout << "U[" << i <<"]["<<j<<"]: "<<U[i][j]<<endl;
@@ -474,8 +482,8 @@ REAL** chorin::computeV(REAL** V, int imax, int jmax, REAL delt, REAL dely, REAL
 {
     int i,j;
     
-    for(i=1;i<imax+2;i++){
-        for(j=1;j<jmax+1;j++){
+    for(i=1;i<imax+1;i++){
+        for(j=1;j<jmax;j++){
             V[i][j]=G[i][j]-delt/dely*(P[i][j+1]-P[i][j]);
         }
     }
@@ -492,10 +500,10 @@ REAL chorin::select_delt(int imax, int jmax, REAL tau, REAL Re, REAL delx, REAL 
     dx2=1./delx/delx;
     dy2=1./dely/dely;
     
-    maxU = maxMat(U, imax, jmax);
-    maxV = maxMat(V, imax, jmax);
+    maxU = maxMat(U, imax+2, jmax+2);
+    maxV = maxMat(V, imax+2, jmax+2);
     
-    delta = min({Re/2*pow((dx2+dy2),-1), pow(delx,2)/abs(maxU),pow(dely,2)/abs(maxV)});
+    delta = tau* min({Re/2*pow((dx2+dy2),-1), delx/abs(maxU),delx/abs(maxV)});
     
     return(delta);
 }
@@ -506,12 +514,13 @@ REAL chorin::maxMat(REAL** M, int imax, int jmax)
     REAL maxVal = 0.;
     int i,j;
     
-    for(i=1;i<imax+2;i++){
-        for(j=1;j<jmax+2;j++){
-            maxVal = max(M[i][j],maxVal);
+    for(i=0;i<imax;i++){
+        for(j=0;j<jmax;j++){
+            maxVal = max(abs(M[i][j]),maxVal);
         }
+
     }
-    
+    //cout<<" maxVal: " << maxVal;
     return(maxVal);
 }
 
@@ -522,25 +531,25 @@ REAL** chorin::boundaryValuesP (REAL** P, int imax, int jmax, int wN, int wS, in
     //left wall
     if(wW==2)
     {
-        for(j=1;j<jmax;j++)
+        for(j=1;j<jmax+1;j++)
             P[0][j] = P[1][j];
     }
     //right wall
     if(wE==2)
     {
-        for(j=1;j<jmax;j++)
+        for(j=1;j<jmax+1;j++)
             P[imax+1][j] = P[imax][j];
     }
     //bottom wall
     if(wS==2)
     {
-        for(i=1;i<imax;i++)
+        for(i=1;i<imax+1;i++)
             P[i][0] = P[i][1];
     }
     //top wall
     if(wN==2)
     {
-        for(i=1;i<imax;i++)
+        for(i=1;i<imax+1;i++)
             P[i][jmax+1] = P[i][jmax];
     }
     
@@ -558,13 +567,13 @@ REAL** chorin::boundaryValuesF (REAL** U, REAL**F, int imax, int jmax, int wN, i
     //left wall
     if(wW==2)
     {
-        for(j=1;j<jmax+2;j++)
+        for(j=1;j<jmax;j++)
             F[0][j] = U[0][j];
     }
     //right wall
     if(wE==2)
     {
-        for(j=1;j<jmax+2;j++)
+        for(j=1;j<jmax;j++)
             F[imax+1][j] = U[imax+1][j];
     }
     
@@ -579,22 +588,22 @@ REAL** chorin::boundaryValuesG (REAL** V, REAL** G, int imax, int jmax, int wN, 
     // bottom  wall
     if(wS==2)
     {
-        for(i=1;i<imax+2;i++)
+        for(i=1;i<imax+1;i++)
             G[i][0] = V[i][0];
     }
     if(wN==2)
     {
-        for(i=1;i<imax+2;i++)
+        for(i=1;i<imax+1;i++)
             G[i][jmax+1] = V[i][jmax];
     }
     return(G);
 }
 
-REAL ** chorin::RMATRIX_ZERO(REAL **m, REAL zero, int imax, int jmax)
+REAL ** chorin::RMATRIX_ZERO(REAL zero, int imax, int jmax)
 {
        int i,j;
     
-       m = new REAL*[imax];
+       REAL ** m = new REAL*[imax];
        for(i = 0; i < imax; ++i){
            m[i] = new REAL[jmax];
            for(j=0;j<jmax; ++j){

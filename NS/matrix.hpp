@@ -13,6 +13,7 @@
 #include <iostream>
 #include"datadef.h"
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 

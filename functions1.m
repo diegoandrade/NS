@@ -404,29 +404,28 @@ For[i=2,i<imax+2,i++,
 Return[P];
 ];
 
-boundaryValuesF[MatU_,F_,imax_,jmax_,wN_,wE_,wW_,wS_]:=
+boundaryValuesF[MatU_,F,imax_,jmax_,wN_,wE_,wW_,wS_]:=
 Module[{U=MatU,i,j},
 (*F= Table[0,{imax+2},{jmax+2}];*)
 (* w.r.t.u *)
 (* bottom wall *)
-(*If[wW==2,
+If[wW==2,
 For[j=2,j<jmax+2,j++,
 		F[[1,j]]=U[[1,j]];
 ];
 ];
 (* right wall *)
-	If[wE==2,
+If[wE==2,
 For[j=2,j<jmax+2,j++,
 		F[[imax+1,j]]=U[[imax+1,j]];
 ];
-];*)
-
+];
 Return[F];
 ];
 
-boundaryValuesG[MatV_,imax_,jmax_,wN_,wE_,wW_,wS_]:=
-Module[{V=MatV,G,i,j},
-G= Table[0,{imax+2},{jmax+2}];
+boundaryValuesG[MatV_,G,imax_,jmax_,wN_,wE_,wW_,wS_]:=
+Module[{V=MatV,i,j},
+(*G= Table[0,{imax+2},{jmax+2}];*)
 (* bottom wall *)
 If[wS==2,
 For[i=2,i<imax+2,i++,
