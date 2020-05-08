@@ -70,20 +70,20 @@ int main(int argc, char * argv[]) {
     REAL timen = 0; // timet:time value,timen:time index
     REAL delt = 0.02;  //Time Step
     REAL tau = 0.5; //Safety factor for time step size control \[Tau]
-    REAL tend = 10;
+    REAL tend = 40;
   
  
     
     //Pressure Itertion Data
     //int it = 0;  // SOR counter
     //REAL res = 0; // Norm of pressure equation residual
-    REAL eps = 0.001; // Stopping tolerance for pressure iteration
+    REAL eps = 0.0001; // Stopping tolerance for pressure iteration
     REAL gamma = 0.9; //Upwind differencing factor \[Gamma]
     
    //Problem Dependent quatities
    //Rey= 1000;//Reynolds Number
 
-    REAL Reynolds = 1000;
+    REAL Reynolds = 10000;
     REAL GX = 0; // Body forces
     REAL GY = 0; // Body forces
 
@@ -165,7 +165,7 @@ int main(int argc, char * argv[]) {
     while(iter < itermax && ritnorm > eps)
     {
        ////obj_m.PRINT_MATRIX(P, imax+2, jmax+2,"P.ant");
-       PNEW = obj_c.computepNew(imax,  jmax,  omega,  delx,  dely, P,  RHS);
+       PNEW = obj_c.computepNew(imax,  jmax,  omega,  delx,  dely, P, PNEW, RHS);
         //obj_m.PRINT_MATRIX(P, imax+2, jmax+2,"P.pos");
         //obj_m.PRINT_MATRIX(PNEW, imax+2, jmax+2,"PNEW.pos");
         RIT = obj_c.computeRit(RIT,imax, jmax, delx, dely, P, RHS);
@@ -272,7 +272,7 @@ int main(int argc, char * argv[]) {
            {
               //cout << "\niteration# : " << iter << " ====================================================================================================================================================================="<< "\n";
               //obj_m.PRINT_MATRIX(P, imax+2, jmax+2,"P.ant");
-              PNEW = obj_c.computepNew(imax,  jmax,  omega,  delx,  dely, P,  RHS);
+              PNEW = obj_c.computepNew(imax,  jmax,  omega,  delx,  dely, P, PNEW, RHS);
               //obj_m.PRINT_MATRIX(PNEW, imax+2, jmax+2,"PNEW.pos");
               //obj_m.PRINT_MATRIX(P, imax+2, jmax+2,"P.in");
               RIT = obj_c.computeRit(RIT,imax, jmax, delx, dely, P, RHS);
@@ -318,7 +318,7 @@ int main(int argc, char * argv[]) {
     //obj_m.PRINT_MATRIX(rit, imax+2, jmax+2,"rit");
   
 
-    /*obj_m.FREE_RMATRIX(U, imax);
+    obj_m.FREE_RMATRIX(U, imax);
     obj_m.FREE_RMATRIX(V, imax);
     obj_m.FREE_RMATRIX(PNEW, imax);
     obj_m.FREE_RMATRIX(F, imax);

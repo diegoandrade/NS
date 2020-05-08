@@ -17,7 +17,7 @@ matrix * q = new matrix();
 
 chorin::chorin()
 {
-    q->m;
+    
 }
 
 chorin::~chorin()
@@ -362,12 +362,12 @@ REAL chorin::epsW(int i)
     return (ret);
 }
 
-REAL** chorin::computepNew( int imax, int jmax, REAL omega, REAL delx, REAL dely, REAL** P, REAL ** RHS)
+REAL** chorin::computepNew( int imax, int jmax, REAL omega, REAL delx, REAL dely, REAL** P, REAL** PNEW, REAL ** RHS)
 {
     int i,j;
     REAL rdx2,rdy2,a,b,c,d;
 
-    REAL** PNEW = RMATRIX_ZERO(0.0, imax+2, jmax+2); //delete object??
+    //PNEW = RMATRIX_ZERO(PNEW, 0.0, imax+2, jmax+2); //delete object??
     
    for(j=1;j<jmax+1;j++){
              PNEW[0][j]=P[1][j];
@@ -599,11 +599,11 @@ REAL** chorin::boundaryValuesG (REAL** V, REAL** G, int imax, int jmax, int wN, 
     return(G);
 }
 
-REAL ** chorin::RMATRIX_ZERO(REAL zero, int imax, int jmax)
+REAL ** chorin::RMATRIX_ZERO(REAL** m , REAL zero, int imax, int jmax)
 {
        int i,j;
     
-       REAL ** m = new REAL*[imax];
+       m = new REAL*[imax];
        for(i = 0; i < imax; ++i){
            m[i] = new REAL[jmax];
            for(j=0;j<jmax; ++j){

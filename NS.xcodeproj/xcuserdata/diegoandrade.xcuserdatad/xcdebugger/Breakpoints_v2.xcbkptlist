@@ -48,7 +48,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "410"
             endingLineNumber = "410"
-            landmarkName = "chorin::computepNew(imax, jmax, omega, delx, dely, P, RHS)"
+            landmarkName = "chorin::computepNew(imax, jmax, omega, delx, dely, P, PNEW, RHS)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -64,7 +64,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "393"
             endingLineNumber = "393"
-            landmarkName = "chorin::computepNew(imax, jmax, omega, delx, dely, P, RHS)"
+            landmarkName = "chorin::computepNew(imax, jmax, omega, delx, dely, P, PNEW, RHS)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

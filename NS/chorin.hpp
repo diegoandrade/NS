@@ -96,7 +96,7 @@ public:
     
     REAL epsS(int j);
     
-    REAL** computepNew(int imax, int jmax, REAL omega, REAL delx, REAL dely, REAL** P, REAL ** RHS);
+    REAL** computepNew(int imax, int jmax, REAL omega, REAL delx, REAL dely, REAL** P, REAL** PNEW, REAL ** RHS);
     
     REAL** computeRit(REAL** RIT, int imax, int jmax, REAL delx, REAL dely, REAL** P, REAL** RHS);
     
@@ -116,7 +116,7 @@ public:
     
     REAL** boundaryValuesG (REAL** V, REAL**G, int imax, int jmax, int wN, int wS, int wE, int wW);
     
-    REAL** RMATRIX_ZERO(REAL zero, int imax, int jmax);
+    REAL** RMATRIX_ZERO(REAL** m, REAL zero, int imax, int jmax);
 
     
 };
